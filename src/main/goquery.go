@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"sync"
+  "os"
 )
 
 type Result struct {
@@ -50,7 +51,18 @@ func GoGet(urls []string) <-chan []Result {
 }
 
 func main() {
-	urls := []string{"http://qiita.com/advent-calendar/2013", "http://qiita.com/advent-calendar/2012", "http://qiita.com/advent-calendar/2011"}
+	args := os.Args
+  if (len(args) < 2) {
+    panic("usage : goquery <url>")
+  }
+
+  urls := []string{}
+  for index, arg := range args {
+    if index != 0 {
+      urls = append(urls, arg)
+    }
+  }
+
 	ch := GoGet(urls)
 	for {
 		results, ok := <-ch
